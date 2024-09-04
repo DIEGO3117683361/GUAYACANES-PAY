@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de Código</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://www.dropbox.com/scl/fi/rq9avkmhp4xls5n6bjwnq/ZVERDE_2.jpg?rlkey=04uqau4wg4w7je83jge55pacq&st=mrd2zme6&dl=1') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+        .blurred-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(8px);
+            z-index: -1;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+        .box, .code-box {
+            background-color: #ffffff; /* Cambiado a blanco puro */
+            border-radius: 15px;
+            padding: 40px 20px 20px 20px; /* Mayor espacio en la parte superior para el logo */
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            z-index: 1;
+        }
+        .box-content, .code-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 60px; /* Espacio para el logo en la parte superior */
+        }
+        .button, .copy-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .button:hover, .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .countdown {
+            font-size: 24px;
+            margin-top: 15px;
+            color: #333;
+        }
+        .announcement {
+            font-size: 16px;
+            color: #333; /* Cambiado a gris oscuro */
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .security-announcement {
+            color: #d9534f; /* Rojo para el anuncio de seguridad */
+        }
+        @media (max-width: 600px) {
+            .box, .code-box {
+                width: 90%;
+                padding: 15px;
+            }
+            .logo {
+                width: 80px;
+            }
+            .button, .copy-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blurred-bg"></div>
+
+    <div id="initial" class="container">
+        <div class="box">
+            <img src="https://www.dropbox.com/scl/fi/mgywqzbwl5ss5tubf5gv6/LOGO_COLOR.jpg.jpg?rlkey=bod3wghu6zprpeclld3p1dbkm&st=22x75dy0&dl=1" class="logo" alt="Logo">
+            <div class="box-content">
+                <p>Ingresa el código brindado por los administradores</p>
+                <input type="text" id="codeInput" placeholder="Código" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <button class="button" onclick="checkCode()">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result" class="container" style="display: none;">
+        <div class="code-box">
+            <img src="https://www.dropbox.com/scl/fi/mgywqzbwl5ss5tubf5gv6/LOGO_COLOR.jpg.jpg?rlkey=bod3wghu6zprpeclld3p1dbkm&st=22x75dy0&dl=1" class="logo" alt="Logo">
+            <div class="code-content">
+                <p id="codeDisplay" style="font-size: 22px; font-weight: bold;"></p>
+                <button class="copy-button" onclick="copyCode()">Copiar</button>
+                <p id="accountType" style="font-size: 18px; margin-top: 10px;"></p>
+                <p id="countdown" class="countdown"></p>
+                <p id="securityAnnouncement" class="security-announcement" style="display: none;"></p>
+                <p class="announcement">Recuerda luego de realizar tu pago, guardar el recibo de tu entidad y en las próximas horas te llegará un mensaje nuestro indicándote que recibimos tu pago y anexando el recibo de pago. Si este mensaje no te ha llegado luego de 24 horas, contáctate de inmediato con nosotros. Recuerda que una vez hayas recibido nuestro mensaje podrás ver reflejado este pago en tu información de cuenta.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialDiv = document.getElementById('initial');
+        const resultDiv = document.getElementById('result');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const accountType = document.getElementById('accountType');
+        const countdownElem = document.getElementById('countdown');
+        const securityAnnouncement = document.getElementById('securityAnnouncement');
+        let countdownInterval;
+
+        function checkCode() {
+            const code = document.getElementById('codeInput').value;
+            if (code === 'GUAPAYBA5872') {
+                codeDisplay.textContent = '745-567929-29';
+                accountType.textContent = 'Cuenta de ahorros Bancolombia';
+                startCountdown();
+            } else if (code === 'GUAPAYNE5872') {
+                codeDisplay.textContent = '311 768 3361';
+                accountType.textContent = 'Nequi';
+                startCountdown();
+            } else {
+                alert('Código incorrecto');
+            }
+            initialDiv.style.display = 'none';
+            resultDiv.style.display = 'flex';
+        }
+
+        function copyCode() {
+            navigator.clipboard.writeText(codeDisplay.textContent).then(() => {
+                alert('Código copiado al portapapeles');
+            });
+        }
+
+        function startCountdown() {
+            let timeLeft = 20;
+            countdownElem.textContent = timeLeft;
+            securityAnnouncement.style.display = 'none';
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                countdownElem.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    codeDisplay.textContent = '************';
+                    securityAnnouncement.textContent = 'Por seguridad, se ocultó la información. Deberá volver a ingresar el código para verla.';
+                    securityAnnouncement.style.display = 'block';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+}
